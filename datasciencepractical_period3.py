@@ -44,15 +44,6 @@ def descriptives(data, title, xlabel, ylabel):
     return
 
 
-def lnregression(data):
-    train_data = data[:-20]
-    test_data = data[-20:]
-    
-    print('Test:', test_data)
-    print('Train: ', train_data)
-    
-    
-    
 
 
 def main():

@@ -1,8 +1,4 @@
-import numpy as np
-import pandas as pd
-import scipy as sc
-import math 
-import matplotlib.pyplot as plt
+
 
 
 #Notes Columns:

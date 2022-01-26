@@ -1,4 +1,5 @@
 ######## installing Packages ######## 
+
 # install.packages("readxl")
 # install.packages("xtable")
 # install.packages("mctest")
@@ -12,7 +13,7 @@
 # install.packages("regclass")
 # install.packages("dplyr")
 # install.packages("ggpubr")
-# install.packages("SmartEDA")
+install.packages("SmartEDA")
 
 ##### Loading Libraries ##### 
 
@@ -33,10 +34,12 @@ colnames = c('state','district', 'democA', 'voteA', 'expendA', 'expendB', 'prtys
 colnames2 = c('state','district','democ','vote90','vote88','inexp90','chexp90','inexp88', 'chexp88','prtystr','rptchall','tenure','lawyer','linexp90','lchexp90'  ,
               'linexp88','lchexp88','incshr90','incshr88','cvote','clinexp','clchexp','cincshr','win88','win90','cwin')
 
-data1 = read_xls('C:/Users/bgn630/Downloads/practicaldatascience-master/data3a.xls', col_names = colnames)
-data2 = read_xls('C:/Users/bgn630/Downloads/practicaldatascience-master/data3b.xls', col_names = colnames2)
+data1 = read_xls('C:/Users/bramg/Desktop/DataScience_practical/data3a.xls', col_names = colnames)
+data2 = read_xls('C:/Users/bramg/Desktop/DataScience_practical/data3b.xls', col_names = colnames2)
 
 quantVariables = data1[,2:10]
+logExpenditureAB = data1[,8:9]
+expendAB = data1[,5:6]
 
 ##### Question 1 ######
 
@@ -66,13 +69,11 @@ votingExpenditureShareA.data = data.frame(data1$voteA, data1$shareA, data1$expen
 cor.data = quantVariables
 cor.cor = cor(cor.data)
 
-##### Question 2 ######
+##### Question 2 ##### 
 
 ### Log vs Normal 
 votingLog.lm = lm(formula = voteA ~ lexpendA, data= data1)
 summary(votingLog)
-
-
 
 data1$l2expendA = exp(data1$expendA)
 votingExpendAExp = lm(formula = voteA ~ l2expendA, data=data1)
@@ -82,4 +83,37 @@ grid1 = matrix(c(1,2), nrow =1, ncol = 2)
 layout(grid1)
 plot(data1$lexpendA, data1$voteA, main = "Log Expenditure A vs Voting % A")
 plot(data1$expendA, data1$voteA,  main = "Expenditure A vs Voting % A")
+
+
+##### LogA, LogB --- Voting A ##### 
+## Log: 
+voteALogALogB.lm = lm(formula = data1$voteA ~ log$lexpendA + log$lexpendB)
+summary(voteALogALogB.lm)
+
+## "Normal" 
+voteAExpAExpB.lm = lm(formula = data1$voteA ~ expend$expendA + expend$expendB)
+summary(voteAExpAExpB.lm)
+
+
+##### Interaction Term ##### 
+interactionTerm = data1$expendA * data1$expendB
+expendAB$interactionTerm = interactionTerm
+
+votingAInteractionTerm.lm = lm(formula = data1$voteA ~ expendAB$expendA + expendAB$expendB + expendAB$interactionTerm)
+summary(votingAInteractionTerm.lm)
+
+
+interactionTermLog = data1$lexpendA * data1$lexpendB
+logExpenditureAB$interactionTermlog = interactionTermLog
+logExpenditureAB
+votingAInteractionTermLog.lm = lm(formula = data1$voteA ~ logExpenditureAB$lexpendA + logExpenditureAB$lexpendB + logExpenditureAB$interactionTermlog)
+summary(votingAInteractionTermLog.lm)
+
+
+#### 
+
+data2
+
+
+
 

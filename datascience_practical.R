@@ -33,7 +33,6 @@ library(jtools)
 library(stargazer)
 
 ##### Loading Data ##### 
-
 colnames = c('state','district', 'democA', 'voteA', 'expendA', 'expendB', 'prtystrA', 'lexpendA', 'lexpendB', 'shareA')
 colnames2 = c('state','district','democ','vote90','vote88','inexp90','chexp90','inexp88', 'chexp88','prtystr','rptchall','tenure','lawyer','linexp90','lchexp90'  ,
               'linexp88','lchexp88','incshr90','incshr88','cvote','clinexp','clchexp','cincshr','win88','win90','cwin')
@@ -43,11 +42,14 @@ data2 = read_xls('C:/Users/bramg/Desktop/DataScience_practical/data3b.xls', col_
 
 quantVariables = data1[,2:10]
 logExpenditureAB = data1[,8:9]
-expendAB = data1[,5:6]
-
+expendAB = data1[,5:6
+                 
+#########                  
+                 
+                 
+                 
 
 ##### Question 1 ######
-
 ### Expenditure A
 votingExpenditure.lm = lm(formula = voteA ~ expendA, data = data1)
 summ(votingExpenditure.lm)
@@ -96,6 +98,9 @@ voteALogALogB.lm = lm(formula = data1$voteA ~ logExpenditureAB$lexpendA + logExp
 ## "Normal" 
 voteAExpAExpB.lm = lm(formula = data1$voteA ~ expendAB$expendA + expendAB$expendB)
 
+stargazer(voteALogALogB.lm, voteAExpAExpB.lm,
+          type = "text", out = "fit_lm.html", omit.stat=c("LL","ser","f"), 
+          align=TRUE ,no.space=TRUE)
 
 #### All variables ####
 colInterest = data1[, c('district', 'democA', 'voteA', 'expendA', 'expendB', 'prtystrA', 'lexpendA', 'lexpendB', 'shareA')]
@@ -115,16 +120,19 @@ stargazer(votingLog.lm, voteALogALogB.lm, votingExpend.lm, voteAExpAExpB.lm, vot
 
 
 ##### Interaction Term ##### 
-interactionTerm = data1$expendA * data1$expendB
+interactionTerm = data1$expendA + data1$expendB
 expendAB$interactionTerm = interactionTerm
 
 votingAInteractionTerm.lm = lm(formula = data1$voteA ~ expendAB$expendA + expendAB$expendB + expendAB$interactionTerm)
 summary(votingAInteractionTerm.lm)
 
 
-interactionTermLog = data1$lexpendA * data1$lexpendB
+interactionTermLog = data1$lexpendA + data1$lexpendB
 logExpenditureAB$interactionTermlog = interactionTermLog
 votingAInteractionTermLog.lm = lm(formula = data1$voteA ~ logExpenditureAB$lexpendA + logExpenditureAB$lexpendB + logExpenditureAB$interactionTermlog)
+
+summary(votingAInteractionTermLog.lm)
+
 
 stargazer(votingAInteractionTermLog.lm, votingAInteractionTerm.lm,
           type = "text", out = "fit_lm.html", omit.stat=c("LL","ser","f"), 
@@ -132,7 +140,14 @@ stargazer(votingAInteractionTermLog.lm, votingAInteractionTerm.lm,
 
 #### 
 
-data2
+
+
+#### Density check ########
+
+descdist(data1$shareA, discrete = FALSE)
+descdist(data1$expendA, discrete = FALSE)
+descdist(data1$expendB, discrete = FALSE)
+
 
 
 
